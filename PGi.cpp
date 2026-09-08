@@ -17,7 +17,7 @@ int buscaLinearIterativa(int arr[], int esq, int dir, int x) {
 
 int main() {
     int n, x;
-    int arr[3005]; // Vetor estatico suficiente para ate 3000 elementos
+    int arr[7500]; // Vetor estatico suficiente para ate 3000 elementos
 
     // 1. Le o tamanho N e o elemento procurado X direto do arquivo[cite: 1]
     if (!(cin >> n >> x)) {
