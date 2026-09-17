@@ -1,1 +1,80 @@
+/**
+ * Trabalho 1 - Estruturas de Dados Básicas 1
+ * Exercício 5: Busca Binária Iterativa
+ * Convenção de intervalo: [esq, dir)
+ */
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+/**
+ * Realiza a busca binaria iterativa no intervalo semiaberto [esq, dir).
+ * O array DEVE estar previamente ordenado de forma crescente.
+ * 
+ * @param arr Vetor ordenado com os elementos inteiros.
+ * @param esq Limite inferior do intervalo (inclusivo).
+ * @param dir Limite superior do intervalo (exclusivo).
+ * @param x Elemento procurado.
+ * @return Indice onde o elemento foi encontrado, ou -1 caso contrario.
+ */
+int buscaBinariaIterativa(const vector<int>& arr, int esq, int dir, int x) {
+    // O intervalo [esq, dir) e valido enquanto contiver ao menos 1 elemento (esq < dir)
+    while (esq < dir) {
+        // Calcula o ponto medio evitando overflow aritmetico
+        int meio = esq + (dir - esq) / 2;
+
+        // Caso 1: Elemento encontrado na posicao central
+        if (arr[meio] == x) {
+            return meio;
+        }
+        
+        // Caso 2: O alvo e menor que o elemento central
+        // Como o intervalo e semiaberto [esq, dir), ajustamos dir = meio
+        // para excluir 'meio' e manter a busca na metade esquerda: [esq, meio)
+        if (x < arr[meio]) {
+            dir = meio;
+        } 
+        // Caso 3: O alvo e maior que o elemento central
+        // Ajustamos esq = meio + 1 para buscar na metade direita: [meio + 1, dir)
+        else {
+            esq = meio + 1;
+        }
+    }
+
+    // Elemento nao encontrado no intervalo semiaberto
+    return -1;
+}
+
+int main() {
+    // Otimizacao das operacoes de entrada e saida padrao
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int n, x;
+
+    // Leitura da quantidade N e do elemento alvo X
+    if (!(cin >> n >> x)) {
+        return 0;
+    }
+
+    // Alocacao dinamica do vetor para suportar testes de larga escala
+    vector<int> arr(n);
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    // Executa a busca binaria iterativa no intervalo semiaberto inicial [0, n)
+    int resultado = buscaBinariaIterativa(arr, 0, n, x);
+
+    // Exibicao do resultado
+    if (resultado != -1) {
+        cout << "Elemento encontrado no indice: " << resultado << "\n";
+    } else {
+        cout << "Elemento nao encontrado\n";
+    }
+
+    return 0;
+}
 
