@@ -1,1 +1,66 @@
+/**
+ * Trabalho 1 - Estruturas de Dados Básicas 1
+ * Exercício 2: Busca Linear Recursiva
+ * Convenção de intervalo: [esq, dir)
+ */
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+/**
+ * Realiza a busca linear recursiva no intervalo semiaberto [esq, dir).
+ * 
+ * @param arr Vetor contendo os elementos inteiros.
+ * @param esq Limite inferior do intervalo (inclusivo).
+ * @param dir Limite superior do intervalo (exclusivo).
+ * @param x Elemento procurado.
+ * @return Indice do elemento caso encontrado, ou -1 caso contrario.
+ */
+int buscaLinearRecursiva(const vector<int>& arr, int esq, int dir, int x) {
+    // Caso base 1: Se o intervalo for invalido ou vazio [esq >= dir), o elemento nao existe
+    if (esq >= dir) {
+        return -1;
+    }
+
+    // Caso base 2: Se o elemento for encontrado na posicao atual 'esq'
+    if (arr[esq] == x) {
+        return esq;
+    }
+
+    // Chamada recursiva: avança a fronteira esquerda em uma posicao [esq + 1, dir)
+    return buscaLinearRecursiva(arr, esq + 1, dir, x);
+}
+
+int main() {
+    // Otimizacao de entrada e saida padrao
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int n, x;
+
+    // Leitura da quantidade N e do elemento alvo X
+    if (!(cin >> n >> x)) {
+        return 0;
+    }
+
+    // Alocacao dinamica com vector para suportar grandes volumes (ate 500.000 elementos)
+    vector<int> arr(n);
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    // Executa a busca linear recursiva no intervalo inicial [0, n)
+    int resultado = buscaLinearRecursiva(arr, 0, n, x);
+
+    // Exibe o resultado final
+    if (resultado != -1) {
+        cout << "Elemento encontrado no indice: " << resultado << "\n";
+    } else {
+        cout << "Elemento nao encontrado\n";
+    }
+
+    return 0;
+}
 
