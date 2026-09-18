@@ -1,4 +1,3 @@
-
 /**
  * Trabalho 1 - Estruturas de Dados Básicas 1
  * Exercício 4: Busca Sequencial Alternativa - Versão Recursiva
@@ -7,6 +6,7 @@
 
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 using namespace std;
 
@@ -22,60 +22,78 @@ using namespace std;
  * @return Indice onde o elemento foi encontrado, ou -1 caso contrario.
  */
 int buscaSequencialAlternativaRecursiva(const vector<int>& arr, int esq, int dir, int x) {
-    // Caso base 1: Se o intervalo for vazio ou invalido, o elemento nao esta presente
     if (esq >= dir) {
         return -1;
     }
 
-    // Verifica a extremidade esquerda do intervalo atual
     if (arr[esq] == x) {
         return esq;
     }
 
-    // Como 'dir' e exclusivo, o elemento da extremidade direita esta em 'dir - 1'
     int ultimo = dir - 1;
 
-    // Se 'esq' e 'ultimo' forem a mesma posicao, nao precisamos checar a direita novamente
     if (esq == ultimo) {
         return -1;
     }
 
-    // Verifica a extremidade direita do intervalo atual
     if (arr[ultimo] == x) {
         return ultimo;
     }
 
-    // Chamada recursiva: avanca o limite esquerdo e recua o limite direito
-    // Novo intervalo semiaberto: [esq + 1, dir - 1)
     return buscaSequencialAlternativaRecursiva(arr, esq + 1, dir - 1, x);
 }
 
 int main() {
-    // Otimizacao de entrada e saida padrao
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
+    // Limite ajustado para evitar Stack Overflow na recursao linear
+    const int START_SIZE = 0;
+    const int END_SIZE   = 20000;
+    const int STEP       = 1000;
+    const int TRIALS     = 10;
 
-    int n, x;
+    // ==========================================
+    // 1. MEDICAO DE PIOR CASO (Elemento nao existe)
+    // ==========================================
+    cout << "=== PIOR CASO (Elemento nao existe) ===\n";
+    cout << "Tamanho,Tempo_ns\n";
 
-    // Leitura da quantidade N e do elemento alvo X
-    if (!(cin >> n >> x)) {
-        return 0;
+    for (int size = START_SIZE; size <= END_SIZE; size += STEP) {
+        vector<int> arr(size, 1);
+        int alvo_pior = 0; // Elemento inexistente no vetor
+        long long tempo_total = 0;
+
+        for (int t = 0; t < TRIALS; t++) {
+            auto inicio = chrono::high_resolution_clock::now();
+            
+            volatile int res = buscaSequencialAlternativaRecursiva(arr, 0, size, alvo_pior);
+            
+            auto fim = chrono::high_resolution_clock::now();
+            tempo_total += chrono::duration_cast<chrono::nanoseconds>(fim - inicio).count();
+        }
+
+        cout << size << "," << (tempo_total / TRIALS) << "\n";
     }
 
-    // Alocacao dinamica do vetor para suportar testes de larga escala
-    vector<int> arr(n);
-    for (int i = 0; i < n; i++) {
-        cin >> arr[i];
-    }
+    // ==========================================
+    // 2. MEDICAO DE MELHOR CASO (Elemento no indice 0)
+    // ==========================================
+    cout << "\n=== MELHOR CASO (Elemento no primeiro indice) ===\n";
+    cout << "Tamanho,Tempo_ns\n";
 
-    // Execucao da busca recursiva no intervalo inicial semiaberto [0, n)
-    int resultado = buscaSequencialAlternativaRecursiva(arr, 0, n, x);
+    for (int size = START_SIZE; size <= END_SIZE; size += STEP) {
+        vector<int> arr(size, 1);
+        int alvo_melhor = 1; // Encontrado imediatamente na primeira verificacao
+        long long tempo_total = 0;
 
-    // Exibicao do resultado
-    if (resultado != -1) {
-        cout << "Elemento encontrado no indice: " << resultado << "\n";
-    } else {
-        cout << "Elemento nao encontrado\n";
+        for (int t = 0; t < TRIALS; t++) {
+            auto inicio = chrono::high_resolution_clock::now();
+            
+            volatile int res = buscaSequencialAlternativaRecursiva(arr, 0, size, alvo_melhor);
+            
+            auto fim = chrono::high_resolution_clock::now();
+            tempo_total += chrono::duration_cast<chrono::nanoseconds>(fim - inicio).count();
+        }
+
+        cout << size << "," << (tempo_total / TRIALS) << "\n";
     }
 
     return 0;
