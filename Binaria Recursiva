@@ -6,6 +6,8 @@
 
 #include <iostream>
 #include <vector>
+#include <numeric>
+#include <chrono>
 
 using namespace std;
 
@@ -45,33 +47,61 @@ int buscaBinariaRecursiva(const vector<int>& arr, int esq, int dir, int x) {
 }
 
 int main() {
-    // Otimizacao das operacoes de entrada e saida padrao
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
+    const int START_SIZE = 0;       // Inicio em 0 elementos
+    const int END_SIZE   = 500000;  // Limite em 500.000
+    const int STEP       = 10000;   // Incremento de 10.000 em 10.000
+    const int TRIALS     = 10;      // 10 repeticoes para calcular a media
 
-    int n, x;
+    // ==========================================
+    // 1. MEDICAO DE PIOR CASO (Elemento inexistente)
+    // ==========================================
+    cout << "=== PIOR CASO (Elemento nao existe) ===\n";
+    cout << "Tamanho,Tempo_ns\n";
 
-    // Leitura da quantidade N e do elemento alvo X
-    if (!(cin >> n >> x)) {
-        return 0;
+    for (int size = START_SIZE; size <= END_SIZE; size += STEP) {
+        vector<int> arr(size);
+        iota(arr.begin(), arr.end(), 1); // Preenche ordenado: 1, 2, 3, ..., size
+
+        int alvo_pior = -1; // Nao existe no vetor
+        long long tempo_total = 0;
+
+        for (int t = 0; t < TRIALS; t++) {
+            auto inicio = chrono::high_resolution_clock::now();
+            
+            volatile int res = buscaBinariaRecursiva(arr, 0, size, alvo_pior);
+            
+            auto fim = chrono::high_resolution_clock::now();
+            tempo_total += chrono::duration_cast<chrono::nanoseconds>(fim - inicio).count();
+        }
+
+        cout << size << "," << (tempo_total / TRIALS) << "\n";
     }
 
-    // Alocacao dinamica do vetor ordenado
-    vector<int> arr(n);
-    for (int i = 0; i < n; i++) {
-        cin >> arr[i];
-    }
+    // ==========================================
+    // 2. MEDICAO DE MELHOR CASO (Elemento no meio exato)
+    // ==========================================
+    cout << "\n=== MELHOR CASO (Elemento no meio exato) ===\n";
+    cout << "Tamanho,Tempo_ns\n";
 
-    // Executa a busca binaria recursiva no intervalo inicial [0, n)
-    int resultado = buscaBinariaRecursiva(arr, 0, n, x);
+    for (int size = START_SIZE; size <= END_SIZE; size += STEP) {
+        vector<int> arr(size);
+        iota(arr.begin(), arr.end(), 1);
 
-    // Exibicao do resultado
-    if (resultado != -1) {
-        cout << "Elemento encontrado no indice: " << resultado << "\n";
-    } else {
-        cout << "Elemento nao encontrado\n";
+        // Melhor caso da busca binaria: elemento central verificado no primeiro passo
+        int alvo_melhor = (size > 0) ? arr[size / 2] : -1;
+        long long tempo_total = 0;
+
+        for (int t = 0; t < TRIALS; t++) {
+            auto inicio = chrono::high_resolution_clock::now();
+            
+            volatile int res = buscaBinariaRecursiva(arr, 0, size, alvo_melhor);
+            
+            auto fim = chrono::high_resolution_clock::now();
+            tempo_total += chrono::duration_cast<chrono::nanoseconds>(fim - inicio).count();
+        }
+
+        cout << size << "," << (tempo_total / TRIALS) << "\n";
     }
 
     return 0;
 }
-
