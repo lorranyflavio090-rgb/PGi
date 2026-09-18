@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <numeric>
 #include <chrono>
 
 using namespace std;
@@ -15,56 +16,45 @@ using namespace std;
  * @return Indice onde o elemento foi encontrado, ou -1 caso contrario.
  */
 int buscaBinariaIterativa(const vector<int>& arr, int esq, int dir, int x) {
-    // O intervalo [esq, dir) e valido enquanto contiver ao menos 1 elemento (esq < dir)
     while (esq < dir) {
-        // Calcula o ponto medio evitando overflow aritmetico
         int meio = esq + (dir - esq) / 2;
 
-        // Caso 1: Elemento encontrado na posicao central
         if (arr[meio] == x) {
             return meio;
         }
         
-        // Caso 2: O alvo e menor que o elemento central
-        // Como o intervalo e semiaberto [esq, dir), ajustamos dir = meio
-        // para excluir 'meio' e manter a busca na metade esquerda: [esq, meio)
         if (x < arr[meio]) {
             dir = meio;
-        } 
-        // Caso 3: O alvo e maior que o elemento central
-        // Ajustamos esq = meio + 1 para buscar na metade direita: [meio + 1, dir)
-        else {
+        } else {
             esq = meio + 1;
         }
     }
-
-    // Elemento nao encontrado no intervalo semiaberto
     return -1;
 }
 
 int main() {
-    // Parametros conforme o slide do professor
-    const int START_SIZE = 0;       // Inicio em 0 elementos
-    const int END_SIZE   = 500000;  // Limite em 500.000
-    const int STEP       = 10000;   // Incremento de 10.000 em 10.000
-    const int TRIALS     = 10;      // 10 repeticoes para calcular a media
+    const int START_SIZE = 0;
+    const int END_SIZE   = 500000;
+    const int STEP       = 10000;
+    const int TRIALS     = 10;
 
     // ==========================================
-    // 1. MEDICAO DE PIOR CASO
+    // 1. MEDICAO DE PIOR CASO (Elemento nao existe)
     // ==========================================
     cout << "=== PIOR CASO (Elemento nao existe) ===\n";
     cout << "Tamanho,Tempo_ns\n";
 
     for (int size = START_SIZE; size <= END_SIZE; size += STEP) {
-        vector<int> arr(size, 1);
-        int alvo_pior = 0; // Nao existe no vetor (todos sao 1)
+        vector<int> arr(size);
+        iota(arr.begin(), arr.end(), 1); // Preenche: 1, 2, 3, ..., size
+
+        int alvo_pior = -1; // Valor inexistente
         long long tempo_total = 0;
 
         for (int t = 0; t < TRIALS; t++) {
             auto inicio = chrono::high_resolution_clock::now();
             
-            // Passa arr.data() para ser compativel com o int arr[] da sua funcao
-            volatile int res = buscaLinearIterativa(arr.data(), 0, size, alvo_pior);
+            volatile int res = buscaBinariaIterativa(arr, 0, size, alvo_pior);
             
             auto fim = chrono::high_resolution_clock::now();
             tempo_total += chrono::duration_cast<chrono::nanoseconds>(fim - inicio).count();
@@ -74,21 +64,23 @@ int main() {
     }
 
     // ==========================================
-    // 2. MEDICAO DE MELHOR CASO
+    // 2. MEDICAO DE MELHOR CASO (Elemento no meio exato)
     // ==========================================
-    cout << "\n=== MELHOR CASO (Elemento no primeiro indice) ===\n";
+    cout << "\n=== MELHOR CASO (Elemento no meio exato) ===\n";
     cout << "Tamanho,Tempo_ns\n";
 
     for (int size = START_SIZE; size <= END_SIZE; size += STEP) {
-        vector<int> arr(size, 1);
-        int alvo_melhor = 1; // Encontrado imediatamente no indice 0
+        vector<int> arr(size);
+        iota(arr.begin(), arr.end(), 1);
+
+        // O melhor caso da busca binaria e o elemento central da primeira comparacao
+        int alvo_melhor = (size > 0) ? arr[size / 2] : -1;
         long long tempo_total = 0;
 
         for (int t = 0; t < TRIALS; t++) {
             auto inicio = chrono::high_resolution_clock::now();
             
-            // Passa arr.data() para ser compativel com o int arr[] da sua funcao
-            volatile int res = buscaLinearIterativa(arr.data(), 0, size, alvo_melhor);
+            volatile int res = buscaBinariaIterativa(arr, 0, size, alvo_melhor);
             
             auto fim = chrono::high_resolution_clock::now();
             tempo_total += chrono::duration_cast<chrono::nanoseconds>(fim - inicio).count();
