@@ -1,9 +1,3 @@
-/**
- * Trabalho 1 - Estruturas de Dados Básicas 1
- * Exercício 7: Busca Ternária Iterativa
- * Convenção de intervalo: [esq, dir)
- */
-
 #include <iostream>
 #include <vector>
 #include <numeric>
