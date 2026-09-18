@@ -1,11 +1,6 @@
-/**
- * Trabalho 1 - Estruturas de Dados Básicas 1
- * Exercício 5: Busca Binária Iterativa
- * Convenção de intervalo: [esq, dir)
- */
-
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 using namespace std;
 
@@ -48,33 +43,59 @@ int buscaBinariaIterativa(const vector<int>& arr, int esq, int dir, int x) {
 }
 
 int main() {
-    // Otimizacao das operacoes de entrada e saida padrao
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
+    // Parametros conforme o slide do professor
+    const int START_SIZE = 0;       // Inicio em 0 elementos
+    const int END_SIZE   = 500000;  // Limite em 500.000
+    const int STEP       = 10000;   // Incremento de 10.000 em 10.000
+    const int TRIALS     = 10;      // 10 repeticoes para calcular a media
 
-    int n, x;
+    // ==========================================
+    // 1. MEDICAO DE PIOR CASO
+    // ==========================================
+    cout << "=== PIOR CASO (Elemento nao existe) ===\n";
+    cout << "Tamanho,Tempo_ns\n";
 
-    // Leitura da quantidade N e do elemento alvo X
-    if (!(cin >> n >> x)) {
-        return 0;
+    for (int size = START_SIZE; size <= END_SIZE; size += STEP) {
+        vector<int> arr(size, 1);
+        int alvo_pior = 0; // Nao existe no vetor (todos sao 1)
+        long long tempo_total = 0;
+
+        for (int t = 0; t < TRIALS; t++) {
+            auto inicio = chrono::high_resolution_clock::now();
+            
+            // Passa arr.data() para ser compativel com o int arr[] da sua funcao
+            volatile int res = buscaLinearIterativa(arr.data(), 0, size, alvo_pior);
+            
+            auto fim = chrono::high_resolution_clock::now();
+            tempo_total += chrono::duration_cast<chrono::nanoseconds>(fim - inicio).count();
+        }
+
+        cout << size << "," << (tempo_total / TRIALS) << "\n";
     }
 
-    // Alocacao dinamica do vetor para suportar testes de larga escala
-    vector<int> arr(n);
-    for (int i = 0; i < n; i++) {
-        cin >> arr[i];
-    }
+    // ==========================================
+    // 2. MEDICAO DE MELHOR CASO
+    // ==========================================
+    cout << "\n=== MELHOR CASO (Elemento no primeiro indice) ===\n";
+    cout << "Tamanho,Tempo_ns\n";
 
-    // Executa a busca binaria iterativa no intervalo semiaberto inicial [0, n)
-    int resultado = buscaBinariaIterativa(arr, 0, n, x);
+    for (int size = START_SIZE; size <= END_SIZE; size += STEP) {
+        vector<int> arr(size, 1);
+        int alvo_melhor = 1; // Encontrado imediatamente no indice 0
+        long long tempo_total = 0;
 
-    // Exibicao do resultado
-    if (resultado != -1) {
-        cout << "Elemento encontrado no indice: " << resultado << "\n";
-    } else {
-        cout << "Elemento nao encontrado\n";
+        for (int t = 0; t < TRIALS; t++) {
+            auto inicio = chrono::high_resolution_clock::now();
+            
+            // Passa arr.data() para ser compativel com o int arr[] da sua funcao
+            volatile int res = buscaLinearIterativa(arr.data(), 0, size, alvo_melhor);
+            
+            auto fim = chrono::high_resolution_clock::now();
+            tempo_total += chrono::duration_cast<chrono::nanoseconds>(fim - inicio).count();
+        }
+
+        cout << size << "," << (tempo_total / TRIALS) << "\n";
     }
 
     return 0;
 }
-
