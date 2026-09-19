@@ -5,41 +5,42 @@
 
 using namespace std;
 
-/**
- * Realiza a busca ternaria iterativa no intervalo semiaberto [esq, dir).
- * O array DEVE estar previamente ordenado de forma crescente.
- * 
- * @param arr Vetor ordenado contendo os elementos inteiros.
- * @param esq Limite inferior do intervalo (inclusivo).
- * @param dir Limite superior do intervalo (exclusivo).
- * @param x Elemento procurado.
- * @return Indice onde o elemento foi encontrado, ou -1 caso contrario.
- */
 int buscaTernariaIterativa(const vector<int>& arr, int esq, int dir, int x) {
+    // Executa enquanto houver elementos a serem verificados no intervalo [esq, dir)
     while (esq < dir) {
+        // Calcula o tamanho de um terço do intervalo corrente
         int terco = (dir - esq) / 3;
 
-        int meio1 = esq + terco;
-        int meio2 = dir - 1 - terco;
+        // Define os dois pontos pivô que particionam o vetor em três partes
+        int meio1 = esq + terco;           // Primeiro pivô (fim do primeiro terço)
+        int meio2 = dir - 1 - terco;       // Segundo pivô (início do terceiro terço)
 
+        // Caso base 1: elemento encontrado no primeiro ponto pivô
         if (arr[meio1] == x) {
             return meio1;
         }
 
+        // Caso base 2: elemento encontrado no segundo ponto pivô
         if (arr[meio2] == x) {
             return meio2;
         }
 
+        // Se o valor for menor que o pivô 1, descarta os dois terços superiores
         if (x < arr[meio1]) {
-            dir = meio1;
-        } else if (x > arr[meio2]) {
-            esq = meio2 + 1;
-        } else {
-            esq = meio1 + 1;
-            dir = meio2;
+            dir = meio1; // Busca no primeiro terço: [esq, meio1)
+        } 
+        // Se o valor for maior que o pivô 2, descarta os dois terços inferiores
+        else if (x > arr[meio2]) {
+            esq = meio2 + 1; // Busca no terceiro terço: [meio2 + 1, dir)
+        } 
+        // Se estiver entre os pivôs 1 e 2, descarta as extremidades
+        else {
+            esq = meio1 + 1; // Ajusta limite inferior para após meio1
+            dir = meio2;     // Ajusta limite superior até meio2 (exclusivo)
         }
     }
 
+    // Retorna -1 se o intervalo se esgotar sem encontrar o elemento
     return -1;
 }
 
