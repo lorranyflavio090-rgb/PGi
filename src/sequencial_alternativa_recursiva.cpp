@@ -4,35 +4,32 @@
 
 using namespace std;
 
-/**
- * Realiza a busca sequencial alternativa recursiva no intervalo semiaberto [esq, dir).
- * A cada chamada recursiva, inspeciona as duas extremidades atuais do intervalo
- * e reduz o problema para [esq + 1, dir - 1).
- * 
- * @param arr Vetor contendo os elementos inteiros.
- * @param esq Limite inferior do intervalo (inclusivo).
- * @param dir Limite superior do intervalo (exclusivo).
- * @param x Elemento procurado.
- * @return Indice onde o elemento foi encontrado, ou -1 caso contrario.
- */
 int buscaSequencialAlternativaRecursiva(const vector<int>& arr, int esq, int dir, int x) {
+    // Caso base 1: intervalo vazio ou inválido (busca esgotada sem sucesso)
     if (esq >= dir) {
         return -1;
     }
 
+    // Caso base 2: elemento encontrado no limite inferior atual
     if (arr[esq] == x) {
         return esq;
     }
 
-    int ultimo = dir - 1;
+    int ultimo = dir - 1; // Converte o limite exclusivo para o último índice válido
 
+    // Caso base 3: intervalo possuía apenas um único elemento e ele não era x
     if (esq == ultimo) {
         return -1;
     }
 
+    // Caso base 4: elemento encontrado no limite superior atual
     if (arr[ultimo] == x) {
         return ultimo;
     }
+
+    // Passo recursivo: estreita o intervalo em ambas as extremidades e continua
+    return buscaSequencialAlternativaRecursiva(arr, esq + 1, ultimo, x);
+}
 
     return buscaSequencialAlternativaRecursiva(arr, esq + 1, dir - 1, x);
 }
