@@ -6,29 +6,36 @@
 using namespace std;
 
 /**
- * Realiza a busca binaria iterativa no intervalo semiaberto [esq, dir).
- * O array DEVE estar previamente ordenado de forma crescente.
+ * Realiza a busca binária de forma iterativa em um vetor previamente ordenado.
  * 
- * @param arr Vetor ordenado com os elementos inteiros.
- * @param esq Limite inferior do intervalo (inclusivo).
- * @param dir Limite superior do intervalo (exclusivo).
- * @param x Elemento procurado.
- * @return Indice onde o elemento foi encontrado, ou -1 caso contrario.
+ * @param arr Vetor de inteiros passado por referência constante (sem cópia de dados).
+ * @param esq Índice inicial do intervalo de busca (inclusivo).
+ * @param dir Índice final do intervalo de busca (exclusivo: tamanho do vetor).
+ * @param x   Elemento procurado.
+ * @return    O índice do elemento no vetor se encontrado; caso contrário, retorna -1.
  */
 int buscaBinariaIterativa(const vector<int>& arr, int esq, int dir, int x) {
+    // Executa enquanto houver pelo menos um elemento no intervalo [esq, dir)
     while (esq < dir) {
+        // Calcula o índice do meio prevenindo possível overflow aritmético
         int meio = esq + (dir - esq) / 2;
 
+        // Caso base de sucesso: elemento encontrado no ponto central
         if (arr[meio] == x) {
-            return meio;
+            return meio; // Retorna o índice onde o elemento foi localizado
         }
         
+        // Se o valor procurado for menor, ele só pode estar na metade esquerda
         if (x < arr[meio]) {
-            dir = meio;
-        } else {
-            esq = meio + 1;
+            dir = meio;     // Ajusta o limite superior para descartar a metade direita
+        } 
+        // Se o valor procurado for maior, ele só pode estar na metade direita
+        else {
+            esq = meio + 1; // Ajusta o limite inferior para descartar a metade esquerda
         }
     }
+
+    // Se o laço terminar e os limites se cruzarem, o elemento não está no vetor
     return -1;
 }
 
