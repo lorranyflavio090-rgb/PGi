@@ -5,15 +5,7 @@
 
 using namespace std;
 
-/**
- * Realiza a busca binária de forma iterativa em um vetor previamente ordenado.
- * 
- * @param arr Vetor de inteiros passado por referência constante (sem cópia de dados).
- * @param esq Índice inicial do intervalo de busca (inclusivo).
- * @param dir Índice final do intervalo de busca (exclusivo: tamanho do vetor).
- * @param x   Elemento procurado.
- * @return    O índice do elemento no vetor se encontrado; caso contrário, retorna -1.
- */
+
 int buscaBinariaIterativa(const vector<int>& arr, int esq, int dir, int x) {
     // Executa enquanto houver pelo menos um elemento no intervalo [esq, dir)
     while (esq < dir) {
