@@ -5,16 +5,6 @@
 
 using namespace std;
 
-/**
- * Realiza a busca binaria recursiva no intervalo semiaberto [esq, dir).
- * O array DEVE estar previamente ordenado de forma crescente.
- * 
- * @param arr Vetor ordenado contendo os elementos inteiros.
- * @param esq Limite inferior do intervalo (inclusivo).
- * @param dir Limite superior do intervalo (exclusivo).
- * @param x Elemento procurado.
- * @return Indice onde o elemento foi encontrado, ou -1 caso contrario.
- */
 int buscaBinariaRecursiva(const vector<int>& arr, int esq, int dir, int x) {
     // Caso base 1: O intervalo e invalido ou vazio quando esq >= dir
     if (esq >= dir) {
