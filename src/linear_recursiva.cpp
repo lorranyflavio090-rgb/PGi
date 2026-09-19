@@ -4,14 +4,18 @@
 
 using namespace std;
 
-// Busca Linear Recursiva no intervalo semiaberto [esq, dir)
 int buscaLinearRecursiva(int arr[], int esq, int dir, int x) {
+    // Caso base 1: o intervalo tornou-se inválido/vazio (esgotou as posições sem achar)
     if (esq >= dir) {
-        return -1;
+        return -1; // Elemento inexistente no vetor
     }
+
+    // Caso base 2: elemento encontrado na posição inicial do intervalo corrente
     if (arr[esq] == x) {
-        return esq;
+        return esq; // Retorna o índice da correspondência
     }
+
+    // Passo recursivo: avança o ponteiro/índice inicial em uma unidade e avalia o restante
     return buscaLinearRecursiva(arr, esq + 1, dir, x);
 }
 
