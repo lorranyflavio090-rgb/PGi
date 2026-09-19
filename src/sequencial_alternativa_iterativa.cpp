@@ -5,15 +5,23 @@
 using namespace std;
 
 int buscaAlternativaIterativa(int arr[], int esq, int dir, int x) {
-    int inicio = esq;
-    int fim = dir - 1;
+    int inicio = esq;      // Ponteiro/índice que avança da esquerda para a direita
+    int fim = dir - 1;     // Converte o limite exclusivo para o último índice válido
 
+    // Executa enquanto os ponteiros das extremidades não se cruzarem
     while (inicio <= fim) {
+        // Verifica o elemento na extremidade esquerda atual
         if (arr[inicio] == x) return inicio;
+
+        // Verifica o elemento na extremidade direita atual
         if (arr[fim] == x) return fim;
+
+        // Move os dois ponteiros em direção ao centro do vetor
         inicio++;
         fim--;
     }
+
+    // Retorna -1 se todo o espaço de busca for percorrido sem sucesso
     return -1;
 }
 
