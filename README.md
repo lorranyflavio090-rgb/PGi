@@ -71,6 +71,16 @@ Após a compilação, execute o binário gerado:
 
 ```
 
-## Notas Metodológicas
+## Análise Descritiva: Linha de Base Histórica (1997 vs 2023)
 
-* **Limite da Recursão Linear:** Os algoritmos lineares recursivos operam em profundidade de pilha proporcional a $N$. Por essa razão, foram limitados a $N = 20.000$ para prevenir transbordamento de pilha.
+Comparação dos extremos do período geracional analisado (1997–2023) para as principais variáveis estruturais demográficas.
+
+| Indicador | Região | 1997 | 2023 | Variação Absoluta | Variação Relativa (%) |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **População Total** *(TPopulation1July)* | América Central | 131,4 mi | 182,1 mi | +50,7 milhões | +38,6% |
+| | América do Sul | 332,6 mi | 432,6 mi | +100,0 milhões | +30,1% |
+| **Taxa de Crescimento** *(PopGrowthRate)* | América Central | 1,76% a.a. | 1,00% a.a. | -0,77 p.p. | -43,6% |
+| | América do Sul | 1,56% a.a. | 0,60% a.a. | -0,95 p.p. | -61,2% |
+| **Idade Mediana** *(MedianAgePop)* | América Central | 20,1 anos | 27,8 anos | +7,7 anos | +38,3% |
+| | América do Sul | 23,0 anos | 32,3 anos | +9,3 anos | +40,4% |
+
